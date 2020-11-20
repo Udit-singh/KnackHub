@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'KnackHub',
+      home: AppStart(),
     );
   }
 }
