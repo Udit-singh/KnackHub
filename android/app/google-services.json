@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "822002834979",
+    "firebase_url": "https://knackhub-d6a2c.firebaseio.com",
+    "project_id": "knackhub-d6a2c",
+    "storage_bucket": "knackhub-d6a2c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:822002834979:android:5e970c2efd28e7402c9b96",
+        "android_client_info": {
+          "package_name": "com.example.KnackHub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "822002834979-ltidfk7pbi46dqe5l1m4p7n01u0vakca.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.KnackHub",
+            "certificate_hash": "189dc97978087b42476348316f1d8b109eab7757"
+          }
+        },
+        {
+          "client_id": "822002834979-9j2ge2i0c8gqfka4u5imlvs2okt69as9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.KnackHub",
+            "certificate_hash": "f1dc7683636b96fcec3d77f779733d4c12fe732c"
+          }
+        },
+        {
+          "client_id": "822002834979-vb3fc5qkueh84lcio1043m1p68m240tf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChH7Bt9zliwiT1VUR_KjcPulhu0L-eYiQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "822002834979-vb3fc5qkueh84lcio1043m1p68m240tf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
