@@ -1,6 +1,7 @@
 import 'package:KnackHub/Widget/EventCardCustom.dart';
 import 'package:KnackHub/Widget/customTextField.dart';
 import 'package:KnackHub/constants/text.dart';
+import 'package:KnackHub/screens/signInscreen.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +111,7 @@ class _UserdataState extends State<Userdata> {
               ),
             ),
             Container(
-              height: height * 0.2,
+              height: height * 0.3,
               width: width * 0.8,
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -131,7 +132,7 @@ class _UserdataState extends State<Userdata> {
                       ],
                     ),
                     SizedBox(
-                      height: height * 0.04,
+                      height: height * 0.03,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -147,6 +148,24 @@ class _UserdataState extends State<Userdata> {
                           textEditingController: emailId,
                         ),
                       ],
+                    ),
+                    SizedBox(
+                      height: height * 0.02,
+                    ),
+                    MaterialButton(
+                      child: Text('LOG OUT',
+                          style: TextStyle(color: Colors.white)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      onPressed: () async {
+                        await googleSignIn.signOut();
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (_) => SignIn()),
+                            (route) => false);
+                      },
+                      color: Colors.blue[400],
                     ),
                   ]),
             ),
