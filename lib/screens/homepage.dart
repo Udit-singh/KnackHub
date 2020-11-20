@@ -503,6 +503,28 @@ class _HomepageState extends State<Homepage> {
     // );
   }
 
+  void savePost(DocumentSnapshot document) async {
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection('savedPost')
+        .doc(widget.user.id)
+        .get();
+    if (doc.exists) {
+      FirebaseFirestore.instance
+          .collection('savedPost')
+          .doc(widget.user.id)
+          .update({
+        'saved': FieldValue.arrayUnion([document.id])
+      });
+    } else {
+      FirebaseFirestore.instance
+          .collection('savedPost')
+          .doc(widget.user.id)
+          .set({
+        'saved': FieldValue.arrayUnion([document.id])
+      });
+    }
+  }
+
   buildListOfCards(DocumentSnapshot document, int index, double height) {
     if (document.data()['imgUrl'].isEmpty) {
       loading = false;
@@ -595,6 +617,9 @@ class _HomepageState extends State<Homepage> {
                           //     ),
                           //   ],
                           // ),
+                          IconButton(
+                              icon: Icon(Icons.archive),
+                              onPressed: () => savePost(document)),
                         ],
                       ),
                     ),
@@ -710,17 +735,18 @@ class _HomepageState extends State<Homepage> {
               Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Column(
-                      //   children: [
-                      Text(
-                        document.data()['username'],
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Column(
+                    //   children: [
+                    Text(
+                      document.data()['username'],
+                      style: TextStyle(
+                        fontSize: 20,
                       ),
-                    ]),
+                    ),
+                  ],
+                ),
               ),
             ]),
           ),
