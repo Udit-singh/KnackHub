@@ -1,4 +1,5 @@
 import 'package:KnackHub/Widget/EventCardCustom.dart';
+import 'package:KnackHub/screens/chat_screen.dart';
 import 'package:KnackHub/screens/upload.dart';
 import 'package:KnackHub/screens/uploadpdf.dart';
 import 'package:KnackHub/screens/userProfile.dart';
@@ -24,11 +25,13 @@ class _HomepageState extends State<Homepage> {
   int currentIndex = 0;
   List<Widget> fancyCards;
   TextEditingController query;
+  TextEditingController comment;
   bool loading = true;
   @override
   void initState() {
     super.initState();
     query = TextEditingController();
+    comment = TextEditingController();
     print(query.text);
     currentIndex = 0;
   }
@@ -149,6 +152,17 @@ class _HomepageState extends State<Homepage> {
           BubbleBottomBarItem(
               backgroundColor: Colors.teal,
               icon: Icon(
+                Icons.chat,
+                color: Colors.black,
+              ),
+              activeIcon: Icon(
+                Icons.chat,
+                color: Colors.blueAccent,
+              ),
+              title: Text("Connect")),
+          BubbleBottomBarItem(
+              backgroundColor: Colors.teal,
+              icon: Icon(
                 Icons.person,
                 color: Colors.black,
               ),
@@ -172,7 +186,8 @@ class _HomepageState extends State<Homepage> {
                   } else {
                     fancyCards = [];
                     for (int i = 0; i < snapshot.data.docs.length; i++) {
-                      buildListOfCards(snapshot.data.documents[i], i, height);
+                      buildListOfCards(
+                          snapshot.data.documents[i], i, height, width);
                     }
 
                     return Padding(
@@ -221,9 +236,9 @@ class _HomepageState extends State<Homepage> {
                                   Padding(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: width * 0.05,
-                                        vertical: height * 0.1),
+                                        vertical: height * 0.05),
                                     child: StackedCardCarousel(
-                                      spaceBetweenItems: height * 0.45,
+                                      spaceBetweenItems: height * 0.40,
                                       items: fancyCards,
                                       type:
                                           StackedCardCarouselType.fadeOutStack,
@@ -238,6 +253,7 @@ class _HomepageState extends State<Homepage> {
                                       title: TextField(
                                         controller: query,
                                         enabled: true,
+                                        style: TextStyle(color: Colors.white),
                                         cursorColor: Colors.white,
                                       ),
                                       actions: [
@@ -291,10 +307,10 @@ class _HomepageState extends State<Homepage> {
                                   Padding(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: width * 0.05,
-                                        vertical: height * 0.1),
+                                        vertical: height * 0.05),
                                     child: count != 0
                                         ? StackedCardCarousel(
-                                            spaceBetweenItems: height * 0.45,
+                                            spaceBetweenItems: height * 0.40,
                                             items: fancyCards,
                                             type: StackedCardCarouselType
                                                 .fadeOutStack,
@@ -316,6 +332,7 @@ class _HomepageState extends State<Homepage> {
                                       title: TextField(
                                         controller: query,
                                         enabled: true,
+                                        style: TextStyle(color: Colors.white),
                                         cursorColor: Colors.white,
                                       ),
                                       actions: [
@@ -334,7 +351,7 @@ class _HomepageState extends State<Homepage> {
                 )
               : currentIndex == 2
                   ? SafeArea(
-                      child: Userdata(user: widget.user),
+                      child: ChatScreen(),
                     )
                   : SafeArea(
                       child: Userdata(user: widget.user),
@@ -525,7 +542,8 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
-  buildListOfCards(DocumentSnapshot document, int index, double height) {
+  buildListOfCards(
+      DocumentSnapshot document, int index, double height, double width) {
     if (document.data()['imgUrl'].isEmpty) {
       loading = false;
     }
@@ -675,13 +693,21 @@ class _HomepageState extends State<Homepage> {
                               },
                             ),
                             Container(
-                              color: Colors.grey[100],
-                              child: Text(
-                                "Add Comment ..",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w200,
-                                  letterSpacing: 0.15,
+                              height: height * 0.05,
+                              width: width * 0.50,
+                              color: Colors.grey[20],
+                              child: TextField(
+                                controller: comment,
+                                readOnly: false,
+                                decoration: InputDecoration(
+                                  labelText: "Add Comment ..",
+                                  contentPadding:
+                                      EdgeInsets.fromLTRB(10.0, 0, 0, 0),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                                 ),
+                                textAlign: TextAlign.start,
                               ),
                             ),
                           ],

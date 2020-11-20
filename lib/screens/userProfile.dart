@@ -156,7 +156,11 @@ class _UserdataState extends State<Userdata> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   MaterialButton(
-                    child: Text('My Uploads'),
+                    child: Text('My Uploads',
+                        style: TextStyle(color: Colors.white)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     onPressed: () {
                       setState(() {
                         flag = 1;
@@ -165,7 +169,10 @@ class _UserdataState extends State<Userdata> {
                     color: flag == 1 ? Colors.blue[400] : Colors.grey,
                   ),
                   MaterialButton(
-                    child: Text('Saved'),
+                    child: Text('Saved', style: TextStyle(color: Colors.white)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     onPressed: () {
                       setState(() {
                         flag = 0;
