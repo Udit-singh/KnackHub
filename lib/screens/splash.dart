@@ -29,7 +29,15 @@ class _AppStartState extends State<AppStart> {
       DocumentSnapshot doc = await usersRef.doc(user.id).get();
       if (!doc.exists) {
         Navigator.push(context, MaterialPageRoute(builder: (_) => SignIn()));
-      } else {}
+      } else {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (_) => Homepage(
+                      user: user,
+                    )),
+            (route) => false);
+      }
     } else {
       print('PROBLEM IN HANDLE SIGN IN METHOD');
     }
@@ -61,11 +69,35 @@ class _ACMsplashState extends State<ACMsplash> {
           color: Colors.orange.shade50,
           child: Stack(
             children: [
+              // Container(
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: <Widget>[
+              //       TopSvg(
+              //         top: topDark,
+              //         tag: "top",
+              //       ),
+              //       BottomSvg(
+              //         bottom: bottomDark,
+              //         tag: "bottom",
+              //       ),
+              //     ],
+              //   ),
+              // ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  // TopSvg(
+                  //   top: topSplash,
+                  //   tag: "topDark",
+                  // ),
                   LogoSvg(),
+                  // BottomSvg(
+                  //   bottom: bottom,
+                  //   tag: "bottomDark",
+                  // ),
                 ],
               ),
             ],

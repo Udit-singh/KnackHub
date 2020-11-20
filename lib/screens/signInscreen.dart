@@ -1,4 +1,6 @@
 import 'package:KnackHub/Model/user.dart';
+import 'package:KnackHub/Widget/customSignInButton.dart';
+import 'package:KnackHub/screens/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
@@ -47,6 +49,10 @@ class _SignInState extends State<SignIn> {
       final user = await googleSignIn.signIn();
       DocumentSnapshot doc = await usersRef.doc(user.id).get();
       if (doc.exists) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => Homepage(user: user)),
+            (route) => false);
       } else {
         usersRef.doc(user.id).set({
           'id': user.id,
@@ -54,6 +60,10 @@ class _SignInState extends State<SignIn> {
           'email': user.email,
           'photoUrl': user.photoUrl,
         });
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => Homepage(user: user)),
+            (route) => false);
       }
     } else {
       SnackBar snackbar = SnackBar(
@@ -123,6 +133,26 @@ class _SignInState extends State<SignIn> {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.01,
             ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                CustomSignInButton(
+                  imageStringUrl: 'Assets/Images/google.png',
+                  label: 'SignIn with Google',
+                  function: logIn,
+                ),
+                Text(
+                  "OR",
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                ),
+                CustomSignInButton(
+                  imageStringUrl: 'Assets/Images/github.png',
+                  label: 'SignIn with Github',
+                  function: githubLogIn,
+                ),
+              ],
+            )
           ],
         ),
       ),
