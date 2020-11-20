@@ -111,67 +111,216 @@ class _UserdataState extends State<Userdata> {
               ),
             ),
             Container(
-              height: height * 0.3,
+              height: height * 0.28,
               width: width * 0.8,
               child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          "Name :",
-                          textAlign: TextAlign.left,
-                          style: InputLabel,
-                        ),
-                        CustomTextField(
-                          inputType: TextInputType.text,
-                          readonly: true,
-                          textEditingController: name,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: height * 0.03,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          "Email :",
-                          textAlign: TextAlign.left,
-                          style: InputLabel,
-                        ),
-                        CustomTextField(
-                          inputType: TextInputType.emailAddress,
-                          readonly: true,
-                          textEditingController: emailId,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    MaterialButton(
-                      child: Text('LOG OUT',
-                          style: TextStyle(color: Colors.white)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Name :",
+                        textAlign: TextAlign.left,
+                        style: InputLabel,
                       ),
-                      onPressed: () async {
-                        await googleSignIn.signOut();
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (_) => SignIn()),
-                            (route) => false);
-                      },
-                      color: Colors.blue[400],
+                      CustomTextField(
+                        inputType: TextInputType.text,
+                        readonly: true,
+                        textEditingController: name,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: height * 0.03,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Email :",
+                        textAlign: TextAlign.left,
+                        style: InputLabel,
+                      ),
+                      CustomTextField(
+                        inputType: TextInputType.emailAddress,
+                        readonly: true,
+                        textEditingController: emailId,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: height * 0.02,
+                  ),
+                  MaterialButton(
+                    child:
+                        Text('LOG OUT', style: TextStyle(color: Colors.white)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ]),
+                    onPressed: () async {
+                      await googleSignIn.signOut();
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (_) => SignIn()),
+                          (route) => false);
+                    },
+                    color: Colors.blue[400],
+                  ),
+                ],
+              ),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 0.0),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //     children: [
+            //       MaterialButton(
+            //         child: Text('My Uploads'),
+            //         onPressed: () {
+            //           setState(() {
+            //             flag = 1;
+            //           });
+            //         },
+            //         color: flag == 1 ? Colors.blue[400] : Colors.grey,
+            //       ),
+            //       MaterialButton(
+            //         child: Text('Saved'),
+            //         onPressed: () {
+            //           setState(() {
+            //             flag = 0;
+            //           });
+            //         },
+            //         color: flag == 0 ? Colors.blue[400] : Colors.grey,
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // flag == 0
+            //     ? Container(
+            //         height: height * 0.45,
+            //         width: width,
+            //         child: StreamBuilder(
+            //           stream: FirebaseFirestore.instance
+            //               .collection("allPosts")
+            //               .snapshots(),
+            //           builder: (context, snapshot) {
+            //             if (!snapshot.hasData) {
+            //               return Center(child: CircularProgressIndicator());
+            //             } else {
+            //               for (int i = 0;
+            //                   i < snapshot.data.documents.length;
+            //                   i++) {
+            //                 if (docs.contains(snapshot.data.documents[i]
+            //                         .data()['postId']
+            //                         .toString()) ==
+            //                     true) {
+            //                   return ListView.builder(
+            //                     itemCount: docs.length,
+            //                     itemBuilder: (context, index) =>
+            //                         buildListOfCards(
+            //                             snapshot.data.documents[index],
+            //                             index,
+            //                             height,
+            //                             false),
+            //                   );
+            //                 }
+            //               }
+            //               return Text('');
+            //             }
+            //           },
+            //         ),
+            //       )
+            //     : Container(
+            //         height: height * 0.45,
+            //         width: width,
+            //         child: StreamBuilder(
+            //           stream: FirebaseFirestore.instance
+            //               .collection("users")
+            //               .doc(widget.user.id)
+            //               .collection("userPosts")
+            //               .orderBy('dateTime', descending: true)
+            //               .snapshots(),
+            //           builder: (context, snapshot) {
+            //             if (!snapshot.hasData) {
+            //               return Center(child: CircularProgressIndicator());
+            //             } else {
+            //               return ListView.builder(
+            //                 itemCount: snapshot.data.docs.length,
+            //                 itemBuilder: (context, index) => buildListOfCards(
+            //                     snapshot.data.documents[index],
+            //                     index,
+            //                     height,
+            //                     true),
+            //               );
+            //             }
+            //           },
+            //         ),
+            //       ),
           ],
         ),
       ),
+    );
+  }
+
+  void delete(DocumentSnapshot doc) async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(widget.user.id)
+        .collection("userPosts")
+        .doc(doc.id)
+        .delete();
+    await FirebaseFirestore.instance
+        .collection("allPosts")
+        .doc(doc.id)
+        .delete();
+    await FirebaseStorage.instance.ref().child('${doc.id}/image').delete();
+  }
+
+  void delete2(DocumentSnapshot doc) async {
+    await FirebaseFirestore.instance
+        .collection("savedPost")
+        .doc(widget.user.id)
+        .set({
+      'saved': FieldValue.arrayRemove([doc.id])
+    });
+  }
+
+  Widget buildListOfCards(
+      DocumentSnapshot document, int index, double height, bool flag) {
+    return Column(
+      children: [
+        Card(
+          elevation: 2,
+          child: ListTile(
+            leading: CircleAvatar(
+              radius: 25,
+              backgroundImage:
+                  NetworkImage('${document.data()['imgUrl'].toString()}'),
+            ),
+            title: Text(document.data()['topic']),
+            subtitle: Text(
+              document.data()['dateTime'].toDate().toString().substring(0, 11),
+            ),
+            trailing: flag
+                ? IconButton(
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.red[400],
+                    ),
+                    onPressed:
+                        flag ? () => delete(document) : () => delete2(document),
+                  )
+                : null,
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) =>
+                        EventCard(document: document, index: index))),
+          ),
+        ),
+        SizedBox(height: height * 0.005),
+      ],
     );
   }
 }

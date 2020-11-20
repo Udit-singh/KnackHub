@@ -46,7 +46,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.close), onPressed: () {}),
+          IconButton(icon: Icon(Icons.developer_mode), onPressed: () {}),
         ],
       ),
       body: SafeArea(
@@ -76,7 +76,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         messageTextController.clear();
                         _firestore.collection('messages').add({
                           'text': messageText,
-                          'sender': user.email,
+                          'sender': user.username,
+                          'timestamp': DateTime.now(),
                         });
                       },
                       child: Text(
@@ -99,7 +100,8 @@ class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('messages').snapshots(),
+      stream:
+          _firestore.collection('messages').orderBy('timestamp').snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -114,7 +116,7 @@ class MessagesStream extends StatelessWidget {
           final messageText = message.data()['text'];
           final messageSender = message.data()['sender'];
 
-          final currentUser = googleSignIn.currentUser.email;
+          final currentUser = googleSignIn.currentUser.displayName;
 
           final messageBubble = MessageBubble(
             sender: messageSender,
