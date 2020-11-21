@@ -202,7 +202,7 @@ class _HomepageState extends State<Homepage> {
                                     horizontal: width * 0.05,
                                     vertical: height * 0.05),
                                 child: StackedCardCarousel(
-                                  spaceBetweenItems: height * 0.45,
+                                  spaceBetweenItems: height * 0.50,
                                   items: fancyCards,
                                   type: StackedCardCarouselType.fadeOutStack,
                                 ),
@@ -274,7 +274,7 @@ class _HomepageState extends State<Homepage> {
                                     vertical: height * 0.05),
                                 child: count != 0
                                     ? StackedCardCarousel(
-                                        spaceBetweenItems: height * 0.45,
+                                        spaceBetweenItems: height * 0.50,
                                         items: fancyCards,
                                         type: StackedCardCarouselType
                                             .fadeOutStack,
@@ -333,14 +333,14 @@ class _HomepageState extends State<Homepage> {
         .doc(widget.user.id)
         .get();
     if (doc.exists) {
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection('savedPost')
           .doc(widget.user.id)
           .update({
         'saved': FieldValue.arrayUnion([document.id])
       });
     } else {
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection('savedPost')
           .doc(widget.user.id)
           .set({
