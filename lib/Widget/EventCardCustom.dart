@@ -1,9 +1,21 @@
-import 'package:KnackHub/screens/ViewPdf.dart';
+import 'dart:io';
+import 'dart:convert';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+
+import 'package:share/share.dart';
+
 import 'package:styled_text/styled_text.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:KnackHub/screens/ViewPdf.dart';
 
 class EventCard extends StatefulWidget {
   final DocumentSnapshot document;
@@ -17,6 +29,25 @@ class EventCard extends StatefulWidget {
 
 class _EventCardState extends State<EventCard> {
   final date = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+
+    saveimg();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  saveimg() async {
+    var response = await get(widget.document.data()['imgUrl']);
+    Directory temp = await getTemporaryDirectory();
+    File imageFile = File(join(temp.path, 'Image.png'));
+    imageFile.writeAsBytesSync(response.bodyBytes);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,10 +103,11 @@ class _EventCardState extends State<EventCard> {
                               height: height * .065,
                               width: width,
                               color: Color(0xFFD8EFFF),
-                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 1),
                               alignment: Alignment.center,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "Uploaded By : " +
@@ -93,17 +125,43 @@ class _EventCardState extends State<EventCard> {
                                       size: 30,
                                     ),
                                     onPressed: () => {
-                                      if (widget.document.get('pdfUrl').isNotEmpty) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        PDFListBody(
-                                                          url: widget.document
-                                                              .get('pdfUrl'),
-                                                        )))
-                                      }
+                                      if (widget.document
+                                          .get('pdfUrl')
+                                          .isNotEmpty)
+                                        {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          PDFListBody(
+                                                            url: widget.document
+                                                                .get('pdfUrl'),
+                                                          )))
+                                        }
+                                    },
+                                  ),
+                                  IconButton(
+                                    color: Colors.blue[900],
+                                    icon: Icon(
+                                      Icons.share,
+                                      size: 30,
+                                    ),
+                                    onPressed: () async {
+                                      Directory temp =
+                                          await getTemporaryDirectory();
+                                      final RenderBox box =
+                                          context.findRenderObject();
+                                      Share.shareFiles(
+                                          [join(temp.path, 'Image.png')],
+                                          subject:
+                                              widget.document.data()['topic'],
+                                          text:
+                                              "${widget.document.data()['description']}"
+                                                  .replaceAll("\\n", "\n"),
+                                          sharePositionOrigin:
+                                              box.localToGlobal(Offset.zero) &
+                                                  box.size);
                                     },
                                   ),
                                 ],
