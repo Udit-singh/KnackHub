@@ -54,6 +54,7 @@ dependencies:
   pdf_flutter: ^1.1.3
   animated_text_kit: ^1.3.0
   modal_progress_hud: ^0.1.3
+  timeago: 2.0.17
   
   
 dev_dependencies:

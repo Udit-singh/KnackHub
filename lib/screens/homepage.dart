@@ -1,5 +1,7 @@
 import 'package:KnackHub/Widget/EventCardCustom.dart';
 import 'package:KnackHub/screens/chat_screen.dart';
+import 'package:KnackHub/screens/comment.dart';
+import 'package:KnackHub/screens/postScreen.dart';
 import 'package:KnackHub/screens/upload.dart';
 import 'package:KnackHub/screens/uploadpdf.dart';
 import 'package:KnackHub/screens/userProfile.dart';
@@ -22,6 +24,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   int currentIndex = 0;
   List<Widget> fancyCards;
   TextEditingController query;
@@ -102,6 +105,7 @@ class _HomepageState extends State<Homepage> {
     ht = height;
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.orange.shade50,
       resizeToAvoidBottomInset: true,
       resizeToAvoidBottomPadding: true,
@@ -149,6 +153,17 @@ class _HomepageState extends State<Homepage> {
                 color: Colors.blueAccent,
               ),
               title: Text("Connect")),
+          BubbleBottomBarItem(
+              backgroundColor: Colors.teal,
+              icon: Icon(
+                Icons.post_add,
+                color: Colors.black,
+              ),
+              activeIcon: Icon(
+                Icons.post_add,
+                color: Colors.red,
+              ),
+              title: Text("Posts")),
           BubbleBottomBarItem(
               backgroundColor: Colors.teal,
               icon: Icon(
@@ -302,9 +317,13 @@ class _HomepageState extends State<Homepage> {
               ? SafeArea(
                   child: ChatScreen(),
                 )
-              : SafeArea(
-                  child: Userdata(user: widget.user),
-                ),
+              : currentIndex == 2
+                  ? SafeArea(
+                      child: PostScreen(widget.user),
+                    )
+                  : SafeArea(
+                      child: Userdata(user: widget.user),
+                    ),
     );
   }
 
@@ -415,76 +434,86 @@ class _HomepageState extends State<Homepage> {
                       ),
                     ),
                     Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            LikeButton(
-                              size: 35,
-                              circleColor: CircleColor(
-                                  start: Color(0xff00ddff),
-                                  end: Color(0xff0099cc)),
-                              bubblesColor: BubblesColor(
-                                dotPrimaryColor: Color(0xff33b5e5),
-                                dotSecondaryColor: Color(0xff0099cc),
-                              ),
-                              likeBuilder: (bool isLiked) {
-                                return isLiked
-                                    ? Icon(
-                                        Icons.thumb_up,
-                                        color: isLiked
-                                            ? Colors.yellow.shade800
-                                            : Colors.white70,
-                                        size: 35,
-                                      )
-                                    : Icon(
-                                        Icons.thumb_down,
-                                        color: isLiked
-                                            ? Colors.yellow.shade800
-                                            : Colors.grey.shade300,
-                                        size: 35,
-                                      );
-                              },
-                              likeCount: 0,
-                              countBuilder:
-                                  (int count, bool isLiked, String text) {
-                                var color = isLiked
-                                    ? Colors.deepPurpleAccent
-                                    : Colors.grey;
-                                Widget result;
-                                if (count == 0) {
-                                  result = Text(
-                                    "Like",
-                                    style: TextStyle(color: color),
-                                  );
-                                } else
-                                  result = Text(
-                                    text,
-                                    style: TextStyle(color: color),
-                                  );
-                                return result;
-                              },
+                      padding: const EdgeInsets.all(1.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          LikeButton(
+                            size: 35,
+                            circleColor: CircleColor(
+                                start: Color(0xff00ddff),
+                                end: Color(0xff0099cc)),
+                            bubblesColor: BubblesColor(
+                              dotPrimaryColor: Color(0xff33b5e5),
+                              dotSecondaryColor: Color(0xff0099cc),
                             ),
-                            Container(
-                              height: height * 0.05,
-                              width: width * 0.50,
-                              color: Colors.grey[20],
-                              child: TextField(
-                                controller: comment,
-                                readOnly: false,
-                                decoration: InputDecoration(
-                                  labelText: "Add Comment ..",
-                                  contentPadding:
-                                      EdgeInsets.fromLTRB(10.0, 0, 0, 0),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
+                            likeBuilder: (bool isLiked) {
+                              return Icon(
+                                Icons.thumb_up,
+                                color: isLiked
+                                    ? Colors.yellow.shade800
+                                    : Colors.grey,
+                                size: 25,
+                              );
+                            },
+                            likeCount: 0,
+                            countBuilder:
+                                (int count, bool isLiked, String text) {
+                              var color = isLiked
+                                  ? Colors.deepPurpleAccent
+                                  : Colors.grey;
+                              Widget result;
+                              if (count == 0) {
+                                result = Text(
+                                  "Like",
+                                  style: TextStyle(color: color),
+                                );
+                              } else
+                                result = Text(
+                                  text,
+                                  style: TextStyle(color: color),
+                                );
+                              return result;
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.comment),
+                            onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => Comments(
+                                  postId: document.data()['postId'],
+                                  user: widget.user,
                                 ),
-                                textAlign: TextAlign.start,
                               ),
                             ),
-                          ],
-                        ))
+                          ),
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.bottomRight,
+                              child: MaterialButton(
+                                child: Text('Report'),
+                                onPressed: () {
+                                  print(document.data()['postId']);
+                                  FirebaseFirestore.instance
+                                      .collection('report')
+                                      .doc(widget.user.displayName)
+                                      .set({
+                                    'reported': FieldValue.arrayUnion(
+                                        [document.data()['postId'].toString()])
+                                  });
+                                  SnackBar snackbar = SnackBar(
+                                    content:
+                                        Text('This Post has been reported'),
+                                  );
+                                  _scaffoldKey.currentState
+                                      .showSnackBar(snackbar);
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
