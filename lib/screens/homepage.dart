@@ -202,7 +202,7 @@ class _HomepageState extends State<Homepage> {
                                     horizontal: width * 0.05,
                                     vertical: height * 0.05),
                                 child: StackedCardCarousel(
-                                  spaceBetweenItems: height * 0.50,
+                                  spaceBetweenItems: height * 0.47,
                                   items: fancyCards,
                                   type: StackedCardCarouselType.fadeOutStack,
                                 ),
@@ -274,7 +274,7 @@ class _HomepageState extends State<Homepage> {
                                     vertical: height * 0.05),
                                 child: count != 0
                                     ? StackedCardCarousel(
-                                        spaceBetweenItems: height * 0.50,
+                                        spaceBetweenItems: height * 0.47,
                                         items: fancyCards,
                                         type: StackedCardCarouselType
                                             .fadeOutStack,
@@ -355,171 +355,159 @@ class _HomepageState extends State<Homepage> {
       loading = false;
     }
     return fancyCards.add(
-      Column(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) =>
-                          EventCard(document: document, index: index)),
-                  (route) => true);
-            },
-            child: Card(
-              elevation: 4.0,
-              child: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: height * 0.29,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Stack(fit: StackFit.expand, children: [
-                        Align(
-                            alignment: Alignment.center,
-                            child: loading
-                                ? CircularProgressIndicator()
-                                : Center()),
-                        ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                          child: document.data()['imgUrl'].isNotEmpty
-                              ? Image.network(
-                                  document.data()['imgUrl'],
-                                  fit: BoxFit.fill,
-                                  alignment: Alignment.topCenter,
-                                )
-                              : Center(
-                                  child: Text("Image not available"),
-                                ),
-                        ),
-                      ]),
+      GestureDetector(
+        onTap: () {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => EventCard(document: document, index: index)),
+              (route) => true);
+        },
+        child: Card(
+          elevation: 4.0,
+          child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: height * 0.29,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Stack(fit: StackFit.expand, children: [
+                    Align(
+                        alignment: Alignment.center,
+                        child:
+                            loading ? CircularProgressIndicator() : Center()),
+                    ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      child: document.data()['imgUrl'].isNotEmpty
+                          ? Image.network(
+                              document.data()['imgUrl'],
+                              fit: BoxFit.fill,
+                              alignment: Alignment.topCenter,
+                            )
+                          : Center(
+                              child: Text("Image not available"),
+                            ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
                         children: [
-                          Column(
+                          Text(
+                            document.data()['username'],
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          Row(
                             children: [
-                              Text(
-                                document.data()['username'],
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        0.0, 0.0, 25.0, 0.0),
-                                    child: Text(
-                                      document.data()['topic'],
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    0.0, 0.0, 25.0, 0.0),
+                                child: Text(
+                                  document.data()['topic'],
+                                  style: TextStyle(
+                                    fontSize: 15,
                                   ),
-                                ],
+                                  textAlign: TextAlign.left,
+                                ),
                               ),
                             ],
                           ),
-                          IconButton(
-                              icon: Icon(Icons.archive),
-                              onPressed: () => savePost(document)),
                         ],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(1.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          LikeButton(
-                            size: 35,
-                            circleColor: CircleColor(
-                                start: Color(0xff00ddff),
-                                end: Color(0xff0099cc)),
-                            bubblesColor: BubblesColor(
-                              dotPrimaryColor: Color(0xff33b5e5),
-                              dotSecondaryColor: Color(0xff0099cc),
-                            ),
-                            likeBuilder: (bool isLiked) {
-                              return Icon(
-                                Icons.thumb_up,
-                                color: isLiked
-                                    ? Colors.yellow.shade800
-                                    : Colors.grey,
-                                size: 25,
-                              );
-                            },
-                            likeCount: 0,
-                            countBuilder:
-                                (int count, bool isLiked, String text) {
-                              var color = isLiked
-                                  ? Colors.deepPurpleAccent
-                                  : Colors.grey;
-                              Widget result;
-                              if (count == 0) {
-                                result = Text(
-                                  "Like",
-                                  style: TextStyle(color: color),
-                                );
-                              } else
-                                result = Text(
-                                  text,
-                                  style: TextStyle(color: color),
-                                );
-                              return result;
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.comment),
-                            onPressed: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => Comments(
-                                  postId: document.data()['postId'],
-                                  user: widget.user,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              alignment: Alignment.bottomRight,
-                              child: MaterialButton(
-                                child: Text('Report'),
-                                onPressed: () {
-                                  print(document.data()['postId']);
-                                  FirebaseFirestore.instance
-                                      .collection('report')
-                                      .doc(widget.user.displayName)
-                                      .set({
-                                    'reported': FieldValue.arrayUnion(
-                                        [document.data()['postId'].toString()])
-                                  });
-                                  SnackBar snackbar = SnackBar(
-                                    content:
-                                        Text('This Post has been reported'),
-                                  );
-                                  _scaffoldKey.currentState
-                                      .showSnackBar(snackbar);
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+                      IconButton(
+                          icon: Icon(Icons.archive),
+                          onPressed: () => savePost(document)),
+                    ],
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      LikeButton(
+                        size: 35,
+                        circleColor: CircleColor(
+                            start: Color(0xff00ddff), end: Color(0xff0099cc)),
+                        bubblesColor: BubblesColor(
+                          dotPrimaryColor: Color(0xff33b5e5),
+                          dotSecondaryColor: Color(0xff0099cc),
+                        ),
+                        likeBuilder: (bool isLiked) {
+                          return Icon(
+                            Icons.thumb_up,
+                            color:
+                                isLiked ? Colors.yellow.shade800 : Colors.grey,
+                            size: 25,
+                          );
+                        },
+                        likeCount: 0,
+                        countBuilder: (int count, bool isLiked, String text) {
+                          var color =
+                              isLiked ? Colors.deepPurpleAccent : Colors.grey;
+                          Widget result;
+                          if (count == 0) {
+                            result = Text(
+                              "Like",
+                              style: TextStyle(color: color),
+                            );
+                          } else
+                            result = Text(
+                              text,
+                              style: TextStyle(color: color),
+                            );
+                          return result;
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.comment),
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => Comments(
+                              postId: document.data()['postId'],
+                              user: widget.user,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.bottomRight,
+                          child: MaterialButton(
+                            child: Text('Report'),
+                            onPressed: () {
+                              print(document.data()['postId']);
+                              FirebaseFirestore.instance
+                                  .collection('report')
+                                  .doc(widget.user.displayName)
+                                  .set({
+                                'reported': FieldValue.arrayUnion(
+                                    [document.data()['postId'].toString()])
+                              });
+                              SnackBar snackbar = SnackBar(
+                                content: Text('This Post has been reported'),
+                              );
+                              _scaffoldKey.currentState.showSnackBar(snackbar);
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
