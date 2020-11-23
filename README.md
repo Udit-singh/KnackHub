@@ -1,5 +1,4 @@
 # KnackHub
-</br>
 <h3>Learning/Educational app</h3>
 <img src="https://github.com/Udit-singh/KnackHub/blob/main/Images/image1.jpeg" width="250" height="500">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
